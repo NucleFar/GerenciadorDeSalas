@@ -1,0 +1,24 @@
+services:
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"  # Mapeando a porta do MongoDB do contêiner para a máquina local
+    volumes:
+      - mongodb_data:/data/db  # Volume para persistir os dados
+
+  app:
+    build:
+      context: .  # Diretório base onde o docker-compose.yml está localizado (pasta database)
+    container_name: app
+    depends_on:
+      - mongodb  # A aplicação FastAPI depende do MongoDB
+    
+    #ports:
+    #  - "8000:8000"  # Porta para acessar a FastAPI
+    
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017
+
+volumes:
+  mongodb_data:
+    driver: local  # Volume persistente para o MongoDB
